@@ -1,13 +1,55 @@
 <template>
-<div>
-    <h1>Patients</h1>
-    <button @click="fetchPatients">Load Patients</button>
-    <ul>
-        <li v-for="patient in patients" :key="patient.id">{{ patient.name }}</li>
-    </ul>
+<div class="container">
+    <h1 class="title">Manage Patients</h1>
+
+    <div class="actions">
+        <button @click="showAddPatientForm = true" class="btn add-btn">Add Patient</button>
+        <button @click="fetchPatients" class="btn load-btn">Load Patients</button>
+    </div>
+
+    <div v-if="showAddPatientForm" class="form-container">
+        <h2>Add New Patient</h2>
+        <form @submit.prevent="addPatient">
+            <input type="text" v-model="newPatient.name" placeholder="Name" required />
+            <input type="email" v-model="newPatient.email" placeholder="Email" required />
+            <button type="submit" class="btn">Add</button>
+        </form>
+    </div>
+
+    <div class="table-container">
+        <table class="table-custom">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="patient in patients" :key="patient.id">
+                    <td>{{ patient.name }}</td>
+                    <td>{{ patient.email }}</td>
+                    <td>
+                        <button @click="editPatient(patient)" class="btn edit-btn">Edit</button>
+                        <button @click="deletePatient(patient.id)" class="btn delete-btn">Delete</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div v-if="showEditPatientForm" class="form-container">
+        <h2>Edit Patient</h2>
+        <form @submit.prevent="updatePatient">
+            <input type="text" v-model="currentPatient.name" placeholder="Name" required />
+            <input type="email" v-model="currentPatient.email" placeholder="Email" required />
+            <button type="submit" class="btn">Update</button>
+        </form>
+    </div>
 </div>
 </template>
 
+  
 <script>
 import axios from 'axios';
 
@@ -16,80 +58,86 @@ export default {
     data() {
         return {
             patients: [],
+            newPatient: {
+                name: '',
+                email: ''
+            },
+            currentPatient: {},
+            showAddPatientForm: false,
+            showEditPatientForm: false
         };
     },
     methods: {
         async fetchPatients() {
             try {
-                const response = await axios.get(this.$store.state.apiUrl + `/patients`, {
+                const response = await axios.get(this.$store.state.apiUrl + '/api/patients', {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`
-                    },
+                    }
                 });
                 this.patients = response.data;
             } catch (error) {
                 console.error('Failed to fetch patients', error);
             }
         },
-    },
-
-}
+        async addPatient() {
+            try {
+                const response = await axios.post(this.$store.state.apiUrl + '/api/patients', this.newPatient, {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+                this.patients.push(response.data);
+                this.newPatient = {
+                    name: '',
+                    email: ''
+                };
+                this.showAddPatientForm = false;
+            } catch (error) {
+                console.error('Failed to add patient', error);
+            }
+        },
+        editPatient(patient) {
+            this.currentPatient = {
+                ...patient
+            };
+            this.showEditPatientForm = true;
+        },
+        async updatePatient() {
+            try {
+                const response = await axios.put(this.$store.state.apiUrl + `/api/patients/${this.currentPatient.id}`, this.currentPatient, {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+                const index = this.patients.findIndex(p => p.id === this.currentPatient.id);
+                this.patients.splice(index, 1, response.data);
+                this.showEditPatientForm = false;
+                this.currentPatient = {};
+            } catch (error) {
+                console.error('Failed to update patient', error);
+            }
+        },
+        async deletePatient(id) {
+            try {
+                await axios.delete(this.$store.state.apiUrl + `/api/patients/${id}`, {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+                this.patients = this.patients.filter(patient => patient.id !== id);
+            } catch (error) {
+                console.error('Failed to delete patient', error);
+            }
+        }
+    }
+};
 </script>
 
+  
 <style scoped>
-.navbar-nav {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-}
-
-.navbar {
-    background: linear-gradient(to right, #4facfe, #37cad1);
-}
-
-.navbar-brand {
-    color: #ffffff;
-    font-weight: bold;
-}
-
-.nav-link {
-    color: #ffffff;
-    font-weight: bold;
-    text-decoration: none;
-    border-radius: 5px;
-    transition: background-color 0.3s;
-    display: flex;
-    align-items: center;
-    /* Center icon and text vertically */
-}
-
-.nav-link i {
-    margin-right: 8px;
-    /* Space between icon and text */
-}
-
-.no-hover:hover {
-    background-color: inherit;
-}
-
-.user-img {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    margin-right: 8px;
-    /* Space between image and text */
-}
-
-.logout-link {
-    display: flex;
-    align-items: center;
-}
-
-.logout-img {
-    width: 20px;
-    height: 20px;
-    margin-right: 8px;
-    /* Space between image and text */
+.container {
+    padding: 20px;
 }
 
 .title {
@@ -100,36 +148,45 @@ export default {
     font-weight: bold;
 }
 
-.container {
-    margin-top: 20px;
+.actions {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
 }
 
-.logout-btn {
-    color: #fff;
-    background-color: #dc3545;
+.btn {
     padding: 10px 20px;
-    border-radius: 5px;
-    text-decoration: none;
+    background-color: #4facfe;
     border: none;
+    border-radius: 5px;
+    color: white;
+    font-size: 16px;
     cursor: pointer;
-    display: inline-block;
     transition: background-color 0.3s;
 }
 
-.button-icon {
-    width: 20px;
-    height: 20px;
-    margin-right: 5px;
-    /* Adjust spacing between icon and text */
+.btn:hover {
+    background-color: #00f2fe;
 }
 
-.logout-btn:hover {
-    background-color: #c82333;
+.add-btn {
+    background-color: #28a745;
+}
+
+.add-btn:hover {
+    background-color: #218838;
+}
+
+.load-btn {
+    background-color: #007bff;
+}
+
+.load-btn:hover {
+    background-color: #0069d9;
 }
 
 .table-container {
-    display: flex;
-    flex-direction: column;
+    margin-top: 20px;
 }
 
 .table-custom {
@@ -137,20 +194,18 @@ export default {
     border-collapse: collapse;
     margin-bottom: 20px;
     border: 1px solid #ddd;
-    /* Add border to the table */
 }
 
 .table-custom th,
 .table-custom td {
     padding: 12px 15px;
     text-align: center;
-    border: 2px solid #000000;
-    /* Add border to table cells */
+    border: 1px solid #ddd;
 }
 
 .table-custom th {
-    background-color: #99c2eb;
-    font-weight: bold;
+    background-color: #4facfe;
+    color: white;
 }
 
 .table-custom tr:nth-child(even) {
@@ -161,70 +216,40 @@ export default {
     background-color: #e9ecef;
 }
 
-.pagination-buttons {
-    display: flex;
-    justify-content: center;
+.form-container {
     margin-top: 20px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
 }
 
-.pagination-buttons button {
-    margin: 0 5px;
+form input {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
 }
 
-.action-buttons {
-    display: flex;
-    gap: 10px;
+form button {
+    width: 100%;
 }
 
-.button-icon {
-    width: 20px;
-    height: 20px;
-    margin-right: 5px;
-    filter: invert(100%);
-}
-
-.button-icon {
-    width: 40px;
-    height: 40px;
-    margin-right: 2px;
-    filter: invert(100%);
+.edit-btn {
+    background-color: #ffc107;
 }
 
 .edit-btn:hover {
-    background-color: #27a2dc;
+    background-color: #e0a800;
 }
 
-.delete-btn:hover {
-    background-color: #f40303;
-}
-
-.edit-btn,
 .delete-btn {
-    background-color: transparent;
-    border: 2px solid transparent;
-    padding: 5px 15px;
-    position: relative;
+    background-color: #dc3545;
 }
 
-.edit-btn:hover,
 .delete-btn:hover {
-    border-color: #ccc;
-}
-
-.edit-btn::before,
-.delete-btn::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border: 2px solid transparent;
-    transition: border-color 0.3s;
-}
-
-.edit-btn:hover::before,
-.delete-btn:hover::before {
-    border-color: #ffffff;
+    background-color: #c82333;
 }
 </style>
