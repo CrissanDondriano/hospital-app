@@ -70,7 +70,7 @@ export default {
     methods: {
         async fetchPatients() {
             try {
-                const response = await axios.get(this.$store.state.apiUrl + '/api/patients', {
+                const response = await axios.get(this.$store.state.apiUrl + '/patients', {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`
                     }
@@ -82,7 +82,7 @@ export default {
         },
         async addPatient() {
             try {
-                const response = await axios.post(this.$store.state.apiUrl + '/api/patients', this.newPatient, {
+                const response = await axios.post(this.$store.state.apiUrl + '/patients', this.newPatient, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`
                     }
@@ -105,7 +105,7 @@ export default {
         },
         async updatePatient() {
             try {
-                const response = await axios.put(this.$store.state.apiUrl + `/api/patients/${this.currentPatient.id}`, this.currentPatient, {
+                const response = await axios.put(this.$store.state.apiUrl + `/patients/${this.currentPatient.id}`, this.currentPatient, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`
                     }
@@ -120,7 +120,7 @@ export default {
         },
         async deletePatient(id) {
             try {
-                await axios.delete(this.$store.state.apiUrl + `/api/patients/${id}`, {
+                await axios.delete(this.$store.state.apiUrl + `/patients/${id}`, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`
                     }

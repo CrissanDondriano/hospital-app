@@ -69,7 +69,7 @@ export default {
     methods: {
         async fetchDoctors() {
             try {
-                const response = await axios.get(this.$store.state.apiUrl + '/api/doctors', {
+                const response = await axios.get(this.$store.state.apiUrl + '/doctors', {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`
                     }
@@ -81,7 +81,7 @@ export default {
         },
         async addDoctor() {
             try {
-                const response = await axios.post(this.$store.state.apiUrl + '/api/doctors', this.newDoctor, {
+                const response = await axios.post(this.$store.state.apiUrl + '/doctors', this.newDoctor, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`
                     }
@@ -104,7 +104,7 @@ export default {
         },
         async updateDoctor() {
             try {
-                const response = await axios.put(this.$store.state.apiUrl + `/api/doctors/${this.currentDoctor.id}`, this.currentDoctor, {
+                const response = await axios.put(this.$store.state.apiUrl + `/doctors/${this.currentDoctor.id}`, this.currentDoctor, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`
                     }
@@ -119,7 +119,7 @@ export default {
         },
         async deleteDoctor(id) {
             try {
-                await axios.delete(this.$store.state.apiUrl + `/api/doctors/${id}`, {
+                await axios.delete(this.$store.state.apiUrl + `/doctors/${id}`, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`
                     }

@@ -75,7 +75,7 @@ export default {
     methods: {
         async fetchAppointments() {
             try {
-                const response = await axios.get(this.$store.state.apiUrl + '/api/appointments', {
+                const response = await axios.get(this.$store.state.apiUrl + '/appointments', {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`
                     }
@@ -87,7 +87,7 @@ export default {
         },
         async addAppointment() {
             try {
-                const response = await axios.post(this.$store.state.apiUrl + '/api/appointments', this.newAppointment, {
+                const response = await axios.post(this.$store.state.apiUrl + '/appointments', this.newAppointment, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`
                     }
@@ -111,7 +111,7 @@ export default {
         },
         async updateAppointment() {
             try {
-                const response = await axios.put(this.$store.state.apiUrl + `/api/appointments/${this.currentAppointment.id}`, this.currentAppointment, {
+                const response = await axios.put(this.$store.state.apiUrl + `/appointments/${this.currentAppointment.id}`, this.currentAppointment, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`
                     }
@@ -126,7 +126,7 @@ export default {
         },
         async deleteAppointment(id) {
             try {
-                await axios.delete(this.$store.state.apiUrl + `/api/appointments/${id}`, {
+                await axios.delete(this.$store.state.apiUrl + `/appointments/${id}`, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`
                     }

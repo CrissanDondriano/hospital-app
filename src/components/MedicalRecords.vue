@@ -74,7 +74,7 @@ export default {
     methods: {
         async fetchRecords() {
             try {
-                const response = await axios.get(this.$store.state.apiUrl + '/api/records', {
+                const response = await axios.get(this.$store.state.apiUrl + '/records', {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`
                     }
@@ -86,7 +86,7 @@ export default {
         },
         async addRecord() {
             try {
-                const response = await axios.post(this.$store.state.apiUrl + '/api/records', this.newRecord, {
+                const response = await axios.post(this.$store.state.apiUrl + '/records', this.newRecord, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`
                     }
@@ -110,7 +110,7 @@ export default {
         },
         async updateRecord() {
             try {
-                const response = await axios.put(this.$store.state.apiUrl + `/api/records/${this.currentRecord.id}`, this.currentRecord, {
+                const response = await axios.put(this.$store.state.apiUrl + `/records/${this.currentRecord.id}`, this.currentRecord, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`
                     }
@@ -125,7 +125,7 @@ export default {
         },
         async deleteRecord(id) {
             try {
-                await axios.delete(this.$store.state.apiUrl + `/api/records/${id}`, {
+                await axios.delete(this.$store.state.apiUrl + `/records/${id}`, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`
                     }
