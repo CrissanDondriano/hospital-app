@@ -15,7 +15,7 @@ export default {
     name: 'ManageDashboard',
     computed: {
         user() {
-            return this.$store.state.auth.user;
+            return this.$store.state.user;
         },
     },
     methods: {

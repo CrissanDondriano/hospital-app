@@ -38,11 +38,11 @@ export default {
                 });
                 if (response.status === 201) {
                     // Successful login, handle token storage and redirection
-                    localStorage.setItem('user', JSON.stringify(response.data.user));
+                    localStorage.setItem('user_id', response.data.user_id);
                     localStorage.setItem('token', response.data.token);
                     // Fetch products upon successful login
-                    this.$store.commit('auth/SET_USER', response.data.user);
-                    this.$store.commit('auth/SET_TOKEN', response.data.token);
+                    // this.$store.commit('auth/SET_USER', response.data.user_id);
+                    // this.$store.commit('auth/SET_TOKEN', response.data.token);
                     this.$router.push('/dashboard');
                 }
             } catch (error) {
