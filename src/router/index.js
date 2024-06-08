@@ -2,7 +2,11 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import LoginPage from '../components/LoginPage.vue'
 import RegisterPage from '../components/RegisterPage.vue'
-import Dashboard from '../components/Dashboard.vue'
+import Dashboard from '../components/Dashboard.vue';
+import Patients from '../components/Patients.vue';
+import Doctors from '../components/Doctors.vue';
+import Appointments from '../components/Appointments.vue';
+import MedicalRecords from '../components/MedicalRecords.vue';
 
 const routes = [
     { path: '/', component: LoginPage, name: 'login' },
@@ -30,11 +34,44 @@ const routes = [
             next('/');
         }
     },
+    {
+        path: '/patients',
+        name: 'Patients',
+        component: Patients,
+        meta: { requiresAuth: true },
+    },
+    {
+        path: '/doctors',
+        name: 'Doctors',
+        component: Doctors,
+        meta: { requiresAuth: true },
+    },
+    {
+        path: '/appointments',
+        name: 'Appointments',
+        component: Appointments,
+        meta: { requiresAuth: true },
+    },
+    {
+        path: '/records',
+        name: 'MedicalRecords',
+        component: MedicalRecords,
+        meta: { requiresAuth: true },
+    },
 ];
 
 const router = createRouter({
     history: createWebHistory(process.env.BASE_URL),
     routes
 })
+
+router.beforeEach((to, from, next) => {
+    if (to.matched.some(record => record.meta.requiresAuth) && !store.state.token) {
+        next('/login');
+    } else {
+        next();
+    }
+});
+
 
 export default router
