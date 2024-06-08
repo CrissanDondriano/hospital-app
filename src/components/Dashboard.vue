@@ -1,10 +1,35 @@
 <template>
-<div>
-    <h1>Dashboard</h1>
-    <div v-if="user">
-        <p>Welcome, {{ user.name }}</p>
-        <p>Your role: {{ user.role }}</p>
-        <button @click="logout">Logout</button>
+<div class="dashboard" v-if="user">
+    <div class="welcome">
+        <h1>Welcome to Hospital Management System</h1>
+        <div>
+            <p>Welcome, {{ user.name }}!</p>
+            <p>Your role: {{ user.role }}</p>
+        </div>
+        <button @click="logout" class="btn">Logout</button>
+    </div>
+
+    <div class="sections">
+        <div v-if="user.role === 'admin'" class="admin-section">
+            <h2>Admin Section</h2>
+            <router-link to="/patients">Manage Patients</router-link>
+            <router-link to="/doctors">Manage Doctors</router-link>
+            <router-link to="/appointments">Manage Appointments</router-link>
+            <router-link to="/records">Manage Medical Records</router-link>
+        </div>
+
+        <div v-if="user.role === 'doctor'" class="doctor-section">
+            <h2>Doctor Section</h2>
+            <router-link to="/patients">View Patients</router-link>
+            <router-link to="/appointments">Manage Appointments</router-link>
+            <router-link to="/records">Update Medical Records</router-link>
+        </div>
+
+        <div v-if="user.role === 'patient'" class="patient-section">
+            <h2>Patient Section</h2>
+            <router-link to="/appointments">Book Appointments</router-link>
+            <router-link to="/records">View Medical Records</router-link>
+        </div>
     </div>
 </div>
 </template>
@@ -15,209 +40,69 @@ export default {
     name: 'ManageDashboard',
     computed: {
         user() {
-            return this.$store.state.user;
+            return this.$store.getters.user;
         },
+    },
+    created() {
+        if (this.$store.getters.isAuthenticated) {
+            this.$store.dispatch('fetchUser');
+        }
     },
     methods: {
         logout() {
-            localStorage.removeItem('token');
-            localStorage.removeItem('user');
-            this.$store.commit('auth/CLEAR_AUTH');
+            this.$store.dispatch('logout');
             this.$router.push('/');
         },
     },
 };
 </script>
 
+  
 <style scoped>
-.navbar-nav {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
+.dashboard {
+    padding: 20px;
 }
 
-.navbar {
-    background: linear-gradient(to right, #4facfe, #37cad1);
-}
-
-.navbar-brand {
-    color: #ffffff;
-    font-weight: bold;
-}
-
-.nav-link {
-    color: #ffffff;
-    font-weight: bold;
-    text-decoration: none;
-    border-radius: 5px;
-    transition: background-color 0.3s;
-    display: flex;
-    align-items: center;
-    /* Center icon and text vertically */
-}
-
-.nav-link i {
-    margin-right: 8px;
-    /* Space between icon and text */
-}
-
-.no-hover:hover {
-    background-color: inherit;
-}
-
-.user-img {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    margin-right: 8px;
-    /* Space between image and text */
-}
-
-.logout-link {
-    display: flex;
-    align-items: center;
-}
-
-.logout-img {
-    width: 20px;
-    height: 20px;
-    margin-right: 8px;
-    /* Space between image and text */
-}
-
-.title {
-    text-align: center;
-    font-size: 24px;
-    color: #333;
+.welcome {
     margin-bottom: 20px;
-    font-weight: bold;
 }
 
-.container {
-    margin-top: 20px;
+.sections {
+    display: flex;
+    justify-content: space-between;
 }
 
-.logout-btn {
-    color: #fff;
-    background-color: #dc3545;
+.section {
+    flex: 1;
+}
+
+.btn {
     padding: 10px 20px;
-    border-radius: 5px;
-    text-decoration: none;
+    background-color: #4facfe;
     border: none;
+    border-radius: 5px;
+    color: white;
+    font-size: 16px;
     cursor: pointer;
-    display: inline-block;
-    transition: background-color 0.3s;
 }
 
-.button-icon {
-    width: 20px;
-    height: 20px;
-    margin-right: 5px;
-    /* Adjust spacing between icon and text */
+.btn:hover {
+    background-color: #00f2fe;
 }
 
-.logout-btn:hover {
-    background-color: #c82333;
-}
-
-.table-container {
-    display: flex;
-    flex-direction: column;
-}
-
-.table-custom {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
-    border: 1px solid #ddd;
-    /* Add border to the table */
-}
-
-.table-custom th,
-.table-custom td {
-    padding: 12px 15px;
-    text-align: center;
-    border: 2px solid #000000;
-    /* Add border to table cells */
-}
-
-.table-custom th {
-    background-color: #99c2eb;
-    font-weight: bold;
-}
-
-.table-custom tr:nth-child(even) {
-    background-color: #f2f2f2;
-}
-
-.table-custom tr:hover {
-    background-color: #e9ecef;
-}
-
-.pagination-buttons {
-    display: flex;
-    justify-content: center;
+h2 {
     margin-top: 20px;
 }
 
-.pagination-buttons button {
-    margin: 0 5px;
+.router-link {
+    display: block;
+    margin-top: 10px;
+    font-size: 18px;
+    color: #4facfe;
+    text-decoration: none;
 }
 
-.action-buttons {
-    display: flex;
-    gap: 10px;
-}
-
-.button-icon {
-    width: 20px;
-    height: 20px;
-    margin-right: 5px;
-    filter: invert(100%);
-}
-
-.button-icon {
-    width: 40px;
-    height: 40px;
-    margin-right: 2px;
-    filter: invert(100%);
-}
-
-.edit-btn:hover {
-    background-color: #27a2dc;
-}
-
-.delete-btn:hover {
-    background-color: #f40303;
-}
-
-.edit-btn,
-.delete-btn {
-    background-color: transparent;
-    border: 2px solid transparent;
-    padding: 5px 15px;
-    position: relative;
-}
-
-.edit-btn:hover,
-.delete-btn:hover {
-    border-color: #ccc;
-}
-
-.edit-btn::before,
-.delete-btn::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border: 2px solid transparent;
-    transition: border-color 0.3s;
-}
-
-.edit-btn:hover::before,
-.delete-btn:hover::before {
-    border-color: #ffffff;
+.router-link:hover {
+    text-decoration: underline;
 }
 </style>

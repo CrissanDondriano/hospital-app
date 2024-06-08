@@ -4,7 +4,7 @@ import axios from 'axios';
 export const store = new Vuex.Store({
     state: {
         apiUrl: 'http://127.0.0.1:8000/api',
-        user: JSON.parse(localStorage.getItem('user')) || null,
+        user: null,
         token: localStorage.getItem('token') || null,
     },
 
@@ -27,12 +27,15 @@ export const store = new Vuex.Store({
     },
 
     actions: {
-        async fetchUser({ state, commit }) {
+        async fetchUser({ commit, state }) {
             try {
-                const response = await axios.get(state.apiUrl + `/user`, {
-                    headers: { Authorization: `Bearer ${state.token}` },
-                });
-                commit('SET_USER', response.data);
+                const userId = localStorage.getItem('userId');
+                if (userId) {
+                    const response = await axios.get(`${state.apiUrl}/user/${userId}`, {
+                        headers: { Authorization: `Bearer ${state.token}` },
+                    });
+                    commit('SET_USER', response.data);
+                }
             } catch (error) {
                 console.error('Failed to fetch user', error);
             }

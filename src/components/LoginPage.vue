@@ -37,12 +37,10 @@ export default {
                     password: this.password
                 });
                 if (response.status === 201) {
-                    // Successful login, handle token storage and redirection
-                    localStorage.setItem('user_id', response.data.user_id);
-                    localStorage.setItem('token', response.data.token);
-                    // Fetch products upon successful login
-                    // this.$store.commit('auth/SET_USER', response.data.user_id);
-                    // this.$store.commit('auth/SET_TOKEN', response.data.token);
+                    // Successful login, handle token storage
+                    localStorage.setItem('token', response.data.access_token);
+                    localStorage.setItem('userId', response.data.user_id); // Store only the user ID
+                    this.$store.commit('SET_TOKEN', response.data.access_token);
                     this.$router.push('/dashboard');
                 }
             } catch (error) {

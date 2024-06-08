@@ -1,4 +1,3 @@
-// routes.js
 import { createRouter, createWebHistory } from 'vue-router';
 import store from '../store';
 import LoginPage from '../components/LoginPage.vue';
@@ -19,9 +18,9 @@ const routes = [
         beforeEnter: (to, from, next) => {
             localStorage.removeItem('token');
             localStorage.removeItem('user');
-            store.commit('auth/CLEAR_AUTH');
+            store.commit('CLEAR_AUTH');
             next('/');
-        }
+        },
     },
     {
         path: '/dashboard',
@@ -57,23 +56,16 @@ const routes = [
 
 const router = createRouter({
     history: createWebHistory(process.env.BASE_URL),
-    routes
-})
+    routes,
+});
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async(to, from, next) => {
     const token = localStorage.getItem('token');
-    const user = JSON.parse(localStorage.getItem('user'));
-
     if (to.matched.some(record => record.meta.requiresAuth)) {
         if (!token) {
             next('/');
-        } else if (to.matched.some(record => record.meta.roles)) {
-            const roles = to.meta.roles;
-            if (roles.includes(user.role)) {
-                next();
-            } else {
-                next('/dashboard');
-            }
+        } else if (!store.getters.user) {
+            next();
         } else {
             next();
         }
@@ -81,6 +73,4 @@ router.beforeEach((to, from, next) => {
         next();
     }
 });
-
-
-export default router
+export default router;
