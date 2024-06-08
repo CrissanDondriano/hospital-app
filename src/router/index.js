@@ -12,19 +12,6 @@ const routes = [
     { path: '/', component: LoginPage, name: 'login' },
     { path: '/register', component: RegisterPage, name: 'register' },
     {
-        path: '/dashboard',
-        component: Dashboard,
-        name: 'dashboard',
-        beforeEnter: (to, from, next) => {
-            // check if user is logged in and redirect to login page if not
-            if (localStorage.getItem('token')) {
-                next()
-            } else {
-                next('/')
-            }
-        }
-    },
-    {
         path: '/logout',
         name: 'logout',
         component: LoginPage,
@@ -32,6 +19,20 @@ const routes = [
             console.log('logout');
             localStorage.removeItem('token');
             next('/');
+        }
+    },
+    {
+        path: '/dashboard',
+        component: Dashboard,
+        name: 'dashboard',
+        meta: { requiresAuth: true },
+        beforeEnter: (to, from, next) => {
+            // check if user is logged in and redirect to login page if not
+            if (localStorage.getItem('token')) {
+                next()
+            } else {
+                next('/')
+            }
         }
     },
     {
