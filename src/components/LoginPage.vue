@@ -38,24 +38,15 @@ export default {
                 });
                 if (response.status === 201) {
                     // Successful login, handle token storage and redirection
-                    localStorage.setItem('user_id', response.data.user_id);
+                    localStorage.setItem('user', JSON.stringify(response.data.user));
                     localStorage.setItem('token', response.data.token);
                     // Fetch products upon successful login
-                    await this.fetchProducts();
-                    this.$router.push('/home');
+                    this.$store.commit('auth/SET_USER', response.data.user);
+                    this.$store.commit('auth/SET_TOKEN', response.data.token);
+                    this.$router.push('/dashboard');
                 }
             } catch (error) {
                 this.errors = error.response.data.message;
-            }
-        },
-        async fetchProducts() {
-            try {
-                // Fetch products from backend
-                const response = await axios.get(`${this.$store.state.apiUrl}/products`);
-                // Update Vuex store with fetched products
-                this.$store.commit('setProducts', response.data);
-            } catch (error) {
-                console.error("Error fetching products:", error);
             }
         },
         clearErrors() {

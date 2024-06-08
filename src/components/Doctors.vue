@@ -1,129 +1,40 @@
 <template>
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="container-fluid">
-        <a class="navbar-brand">
-            <router-link to="/home" class="nav-link no-hover">PRODUCT MANAGEMENT</router-link>
-        </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item">
-                    <router-link to="/manage-users" class="nav-link no-hover">
-                        <i class="fas fa-user"></i>
-                    </router-link>
-                </li>
-                <li class="nav-item">
-                    <router-link to="/logout" class="nav-link logout-link">
-
-                    </router-link>
-                </li>
-            </ul>
-        </div>
-    </div>
-</nav>
-<div class="container">
-    <div class="row">
-        <h1 class="title">MANAGE DOCTOR</h1>
-    </div>
-    <div class="row mt-2">
-        <!-- <div class="col-md-6">
-            <button @click="createDOCTOR" class="btn btn-primary">Create New User</button>
-        </div> -->
-        <!-- <div class="col-md-6 d-flex justify-content-end">
-            <input type="text" v-model="searchQuery" placeholder="Search..." @keyup.enter="searchUsers">
-        </div> -->
-    </div>
-    <div class="container mt-5">
-
-        <table class="table table-custom">
-            <thead>
-                <tr>
-                    <th class="text-center" width="25%">Name</th>
-                    <th class="text-center" width="30%">Email</th>
-                    <th class="text-center" width="20%">Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- <tr v-for="user in users" :key="user.id">
-                    <td class="text-center">{{ user.name }}</td>
-                    <td class="text-center">{{ user.email }}</td>
-                    <td class="text-center">
-                        <div class="action-buttons">
-                            <button @click="editUser(user)" class="edit-btn"> EDIT </button>
-                            <button @click="deleteUser(user.id)" class="delete-btn"> DELETE </button>
-                        </div>
-                    </td>
-                </tr> -->
-            </tbody>
-        </table>
-
-        <!-- Modal for creating/updating post -->
-        <!-- <div v-if="showUserModal" class="modal show d-block" tabindex="-1">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">{{ editingUser ? 'Edit User' : 'New User' }}</h5>
-                        <button type="button" class="btn-close" @click="closeUserModal"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form @submit.prevent="saveUser">
-                            <div class="mb-3">
-                                <label for="name" class="form-label">Name</label>
-                                <input type="text" v-model="userForm.name" class="form-control" id="postTitle" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="email" class="form-label">Email</label>
-                                <input type="text" v-model="userForm.email" class="form-control" id="postTitle" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="password" class="form-label">Password</label>
-                                <input type="text" v-model="userForm.password" class="form-control" id="postTitle" required>
-                            </div>
-                            <button type="submit" class="btn btn-primary">{{ editingUser ? 'Update' : 'Create' }}</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div> -->
-
-        <!-- Alert for successful creation -->
-        <!-- <div v-if="showCreateSuccess" class="alert alert-success alert-dismissible fade show" role="alert">
-            User created successfully!
-            <button type="button" class="btn-close" @click="dismissCreateAlert" aria-label="Close"></button>
-        </div> -->
-
-        <!-- Alert for successful editing -->
-        <!-- <div v-if="showEditSuccess" class="alert alert-success alert-dismissible fade show" role="alert">
-            User edited successfully!
-            <button type="button" class="btn-close" @click="dismissEditAlert" aria-label="Close"></button>
-        </div> -->
-
-    </div>
+<div>
+    <h1>Doctors</h1>
+    <button @click="fetchDoctors">Load Doctors</button>
+    <ul>
+        <li v-for="doctor in doctors" :key="doctor.id">{{ doctor.name }}</li>
+    </ul>
 </div>
 </template>
 
-    
 <script>
-// import axios from 'axios';
+import axios from 'axios';
 
 export default {
     name: 'ManageDoctors',
     data() {
         return {
-         
+            doctors: [],
         };
     },
-    async created() {
-    },
     methods: {
-       
+        async fetchDoctors() {
+            try {
+                const response = await axios.get(this.$store.state.apiUrl + `/doctors`, {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('token')}`
+                    },
+                });
+                this.doctors = response.data;
+            } catch (error) {
+                console.error('Failed to fetch doctors', error);
+            }
+        },
     },
 }
 </script>
 
-    
 <style scoped>
 .navbar-nav {
     display: flex;

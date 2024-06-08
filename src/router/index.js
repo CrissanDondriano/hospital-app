@@ -1,7 +1,8 @@
 // routes.js
-import { createRouter, createWebHistory } from 'vue-router'
-import LoginPage from '../components/LoginPage.vue'
-import RegisterPage from '../components/RegisterPage.vue'
+import { createRouter, createWebHistory } from 'vue-router';
+import store from '../store';
+import LoginPage from '../components/LoginPage.vue';
+import RegisterPage from '../components/RegisterPage.vue';
 import Dashboard from '../components/Dashboard.vue';
 import Patients from '../components/Patients.vue';
 import Doctors from '../components/Doctors.vue';
@@ -16,8 +17,9 @@ const routes = [
         name: 'logout',
         component: LoginPage,
         beforeEnter: (to, from, next) => {
-            console.log('logout');
             localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            store.commit('auth/CLEAR_AUTH');
             next('/');
         }
     },
@@ -26,38 +28,30 @@ const routes = [
         component: Dashboard,
         name: 'dashboard',
         meta: { requiresAuth: true },
-        beforeEnter: (to, from, next) => {
-            // check if user is logged in and redirect to login page if not
-            if (localStorage.getItem('token')) {
-                next()
-            } else {
-                next('/')
-            }
-        }
     },
     {
         path: '/patients',
         name: 'Patients',
         component: Patients,
-        meta: { requiresAuth: true },
+        meta: { requiresAuth: true, roles: ['admin', 'doctor'] },
     },
     {
         path: '/doctors',
         name: 'Doctors',
         component: Doctors,
-        meta: { requiresAuth: true },
+        meta: { requiresAuth: true, roles: ['admin'] },
     },
     {
         path: '/appointments',
         name: 'Appointments',
         component: Appointments,
-        meta: { requiresAuth: true },
+        meta: { requiresAuth: true, roles: ['admin', 'doctor', 'patient'] },
     },
     {
         path: '/records',
         name: 'MedicalRecords',
         component: MedicalRecords,
-        meta: { requiresAuth: true },
+        meta: { requiresAuth: true, roles: ['admin', 'doctor'] },
     },
 ];
 
@@ -67,8 +61,22 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-    if (to.matched.some(record => record.meta.requiresAuth) && !store.state.token) {
-        next('/login');
+    const token = localStorage.getItem('token');
+    const user = JSON.parse(localStorage.getItem('user'));
+
+    if (to.matched.some(record => record.meta.requiresAuth)) {
+        if (!token) {
+            next('/');
+        } else if (to.matched.some(record => record.meta.roles)) {
+            const roles = to.meta.roles;
+            if (roles.includes(user.role)) {
+                next();
+            } else {
+                next('/dashboard');
+            }
+        } else {
+            next();
+        }
     } else {
         next();
     }

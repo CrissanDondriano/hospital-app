@@ -1,53 +1,46 @@
-import Vuex from 'vuex'
-import axios from 'axios'
+import Vuex from 'vuex';
+import axios from 'axios';
 
 export const store = new Vuex.Store({
     state: {
         apiUrl: 'http://127.0.0.1:8000/api',
-        products: [],
-        product: {},
-        searchQuery: '',
+        user: JSON.parse(localStorage.getItem('user')) || null,
+        token: localStorage.getItem('token') || null,
     },
 
     getters: {
-        getProducts(state) {
-            return state.products;
-        },
-        getProduct: (state) => (id) => {
-            return state.products.find(product => product.id === id);
-        }
+        isAuthenticated: state => !!state.token,
+        user: state => state.user,
     },
 
     mutations: {
-        setProducts(state, products) {
-            state.products = products;
+        SET_USER(state, user) {
+            state.user = user;
         },
-        setProduct(state, product) {
-            state.product = product;
+        SET_TOKEN(state, token) {
+            state.token = token;
         },
-        updateProduct(state, product) {
-            const index = state.products.findIndex(p => p.id === product.id);
-            if (index !== -1) {
-                state.products.splice(index, 1, product);
-            }
-        }
+        CLEAR_AUTH(state) {
+            state.user = null;
+            state.token = null;
+        },
     },
+
     actions: {
-        async refreshProducts({ commit }) {
+        async fetchUser({ state, commit }) {
             try {
-                const response = await axios.get(`${this.state.apiUrl}/products`);
-                commit('setProducts', response.data);
+                const response = await axios.get(state.apiUrl + `/user`, {
+                    headers: { Authorization: `Bearer ${state.token}` },
+                });
+                commit('SET_USER', response.data);
             } catch (error) {
-                console.error("Error fetching products:", error);
+                console.error('Failed to fetch user', error);
             }
         },
-        async filteredProducts({ commit }, searchQuery) {
-            try {
-                const response = await axios.get(`${this.state.apiUrl}/products?search=${searchQuery}`);
-                commit('setProducts', response.data);
-            } catch (error) {
-                console.error("Error filtering products:", error);
-            }
+        logout({ commit }) {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            commit('CLEAR_AUTH');
         },
-    }
+    },
 });
