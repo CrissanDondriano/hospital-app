@@ -33,9 +33,9 @@
         <div class="col-md-6">
             <button @click="createUser" class="btn btn-primary">Create New User</button>
         </div>
-        <div class="col-md-6 d-flex justify-content-end">
-            <input type="text" v-model="searchQuery" placeholder="Search..." @keyup.enter="searchUsers">
-        </div>
+        <!-- <div class="col-md-6 d-flex justify-content-end">
+                <input type="text" v-model="searchQuery" placeholder="Search..." @keyup.enter="searchUsers">
+            </div> -->
     </div>
     <div class="container mt-5">
 
@@ -106,6 +106,7 @@
 </div>
 </template>
 
+    
 <script>
 import axios from 'axios';
 
@@ -196,6 +197,7 @@ export default {
 }
 </script>
 
+    
 <style scoped>
 .navbar-nav {
     display: flex;
