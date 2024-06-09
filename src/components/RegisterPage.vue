@@ -82,103 +82,100 @@ export default {
 
 .registration-container {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background: linear-gradient(to right, #aed9e0, #cfe9ee);
-    font-family: 'Roboto', sans-serif;
-    padding: 20px;
-    background-image: url('https://www.example.com/hospital-bg.jpg');
-    /* Replace with a suitable hospital background image URL */
+    width: 100vw;
+    background: url('https://media.licdn.com/dms/image/D5612AQEPazd7U9Kf1Q/article-cover_image-shrink_720_1280/0/1681454275602?e=2147483647&v=beta&t=e9q_u8PmwiXaY1uWZap8rM8RaZuIQOOFf4G97AJxmQE') center/cover no-repeat;
     background-size: cover;
-    background-position: center;
-}
-
-.registration-card {
-    background: rgba(255, 255, 255, 0.9);
-    /* Semi-transparent background */
-    padding: 2rem;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    max-width: 400px;
+    font-family: 'Roboto', sans-serif;
     text-align: center;
 }
 
+.registration-card {
+  background: rgba(255, 255, 255, 0.9); /* Semi-transparent background */
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+
 h4 {
-    margin-bottom: 1.5rem;
-    font-weight: 700;
-    color: #2c3e50;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  margin-bottom: 1.5rem;
+  font-weight: 700;
+  color: #2c3e50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 h4::before {
-    content: '🩺';
-    /* Medical icon */
-    font-size: 1.5rem;
-    margin-right: 10px;
+  content: '🩺'; /* Medical icon */
+  font-size: 1.5rem;
+  margin-right: 10px;
 }
 
 .form-group {
-    margin-bottom: 1.5rem;
+  margin-bottom: 1.5rem;
 }
 
 .form-control {
-    width: 100%;
-    padding: 0.75rem;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 1rem;
-    transition: border-color 0.3s, box-shadow 0.3s;
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 1rem;
+  transition: border-color 0.3s, box-shadow 0.3s;
 }
 
 .form-control:focus {
-    border-color: #aed9e0;
-    box-shadow: 0 0 0 0.2rem rgba(174, 217, 224, 0.25);
+  border-color: #4facfe;
+  box-shadow: 0 0 0 0.2rem rgba(79, 172, 254, 0.25);
 }
 
 .form-control:hover {
-    border-color: #cfe9ee;
+  border-color: #00f2fe;
 }
 
 .btn {
-    width: 100%;
-    padding: 0.75rem;
-    background-color: #aed9e0;
-    border: none;
-    border-radius: 5px;
-    color: white;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background-color 0.3s, transform 0.3s;
+  width: 100%;
+  padding: 0.75rem;
+  background-color: #4facfe;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;
 }
 
 .btn:hover {
-    background-color: #cfe9ee;
-    transform: scale(1.05);
+  background-color: #00f2fe;
+  transform: scale(1.05);
 }
 
 .text-danger {
-    font-size: 0.85rem;
-    color: #e74c3c;
+  font-size: 0.85rem;
+  color: #e74c3c;
 }
 
 .login-link {
-    margin-top: 1.5rem;
-    font-size: 0.9rem;
+  margin-top: 1.5rem;
+  font-size: 0.9rem;
 }
 
 .login-link a {
-    color: #aed9e0;
-    text-decoration: none;
-    font-weight: 700;
-    transition: color 0.3s, text-decoration 0.3s;
+  color: #4facfe;
+  text-decoration: none;
+  font-weight: 700;
+  transition: color 0.3s, text-decoration 0.3s;
 }
 
 .login-link a:hover {
-    color: #cfe9ee;
-    text-decoration: underline;
+  color: #00f2fe;
+  text-decoration: underline;
 }
 </style>
