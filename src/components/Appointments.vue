@@ -10,7 +10,7 @@
     <div v-if="showAddAppointmentForm" class="form-container">
         <h2>Book New Appointment</h2>
         <form @submit.prevent="addAppointment">
-            <input type="text" v-model="newAppointment.doctor_id" placeholder="Doctor ID" required />
+            <input type="text" v-model="newAppointment.doctor_name" placeholder="Doctor Name" required />
             <input type="date" v-model="newAppointment.date" placeholder="Date" required />
             <button type="submit" class="btn">Book</button>
         </form>
@@ -20,16 +20,16 @@
         <table class="table-custom">
             <thead>
                 <tr>
-                    <th>Doctor ID</th>
-                    <th>Patient ID</th>
+                    <th>Doctor Name</th>
+                    <th>Patient Name</th>
                     <th>Date</th>
                     <th v-if="user.role !== 'patient'">Actions</th>
                 </tr>
             </thead>
             <tbody>
                 <tr v-for="appointment in appointments" :key="appointment.id">
-                    <td>{{ appointment.doctor_id }}</td>
-                    <td>{{ appointment.patient_id }}</td>
+                    <td>{{ appointment.doctor_name }}</td>
+                    <td>{{ appointment.patient_name }}</td>
                     <td>{{ appointment.date }}</td>
                     <td v-if="user.role !== 'patient'">
                         <button @click="editAppointment(appointment)" class="btn edit-btn">Edit</button>
@@ -43,8 +43,8 @@
     <div v-if="showEditAppointmentForm" class="form-container">
         <h2>{{ currentAppointment ? 'Edit Appointment' : 'View Appointment' }}</h2>
         <form @submit.prevent="updateAppointment">
-            <input type="text" v-model="currentAppointment.doctor_id" placeholder="Doctor ID" required />
-            <input type="text" v-model="currentAppointment.patient_id" placeholder="Patient ID" required />
+            <input type="text" v-model="currentAppointment.doctor_name" placeholder="Doctor Name" required />
+            <input type="text" v-model="currentAppointment.patient_name" placeholder="Patient Name" required />
             <input type="date" v-model="currentAppointment.date" placeholder="Date" required />
             <button type="submit" class="btn">{{ currentAppointment ? 'Update' : 'Close' }}</button>
         </form>
@@ -62,8 +62,8 @@ export default {
         return {
             appointments: [],
             newAppointment: {
-                doctor_id: '',
-                patient_id: '',
+                doctor_name: '',
+                patient_name: '',
                 date: ''
             },
             currentAppointment: {},
@@ -91,7 +91,7 @@ export default {
         },
         async addAppointment() {
             try {
-                this.newAppointment.patient_id = this.user.id; // Assigning patient ID based on the logged-in user
+                this.newAppointment.patient_name = this.user.name; // Assigning patient name based on the logged-in user
                 const response = await axios.post(this.$store.state.apiUrl + '/appointments', this.newAppointment, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -99,8 +99,8 @@ export default {
                 });
                 this.appointments.push(response.data);
                 this.newAppointment = {
-                    doctor_id: '',
-                    patient_id: '',
+                    doctor_name: '',
+                    patient_name: '',
                     date: ''
                 };
                 this.showAddAppointmentForm = false;

@@ -10,7 +10,7 @@
     <div v-if="showAddRecordForm" class="form-container">
         <h2>Add New Record</h2>
         <form @submit.prevent="addRecord">
-            <input type="number" v-model="newRecord.patient_id" placeholder="Patient ID" :readonly="user.role !== 'doctor'" required />
+            <input type="text" v-model="newRecord.patient_name" placeholder="Patient Name" required />
             <input type="text" v-model="newRecord.description" placeholder="Description" required />
             <input type="date" v-model="newRecord.date" required />
             <button type="submit" class="btn">Add</button>
@@ -21,7 +21,7 @@
         <table class="table-custom">
             <thead>
                 <tr>
-                    <th>Patient ID</th>
+                    <th>Patient Name</th>
                     <th>Description</th>
                     <th>Date</th>
                     <th v-if="user.role === 'admin'">Actions</th>
@@ -29,7 +29,7 @@
             </thead>
             <tbody>
                 <tr v-for="record in records" :key="record.id">
-                    <td>{{ record.patient_id }}</td>
+                    <td>{{ record.patient_name }}</td>
                     <td>{{ record.description }}</td>
                     <td>{{ record.date }}</td>
                     <td v-if="user.role === 'admin'">
@@ -44,7 +44,7 @@
     <div v-if="showEditRecordForm" class="form-container">
         <h2>{{ currentRecord ? 'Edit Record' : 'View Record' }}</h2>
         <form @submit.prevent="updateRecord">
-            <input type="number" v-model="currentRecord.patient_id" placeholder="Patient ID" :readonly="user.role !== 'doctor'" required />
+            <input type="text" v-model="currentRecord.patient_name" placeholder="Patient Name" required />
             <input type="text" v-model="currentRecord.description" placeholder="Description" required />
             <input type="date" v-model="currentRecord.date" required />
             <button type="submit" class="btn">{{ currentRecord ? 'Update' : 'Close' }}</button>
@@ -53,7 +53,7 @@
 </div>
 </template>
 
-    
+  
 <script>
 import axios from 'axios';
 
@@ -63,7 +63,7 @@ export default {
         return {
             records: [],
             newRecord: {
-                patient_id: '',
+                patient_name: '',
                 description: '',
                 date: ''
             },
@@ -92,9 +92,6 @@ export default {
         },
         async addRecord() {
             try {
-                if (this.user.role === 'doctor') {
-                    this.newRecord.patient_id = this.user.id; // Assigning patient ID based on the logged-in doctor
-                }
                 const response = await axios.post(this.$store.state.apiUrl + '/records', this.newRecord, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -102,7 +99,7 @@ export default {
                 });
                 this.records.push(response.data);
                 this.newRecord = {
-                    patient_id: '',
+                    patient_name: '',
                     description: '',
                     date: ''
                 };
@@ -119,10 +116,6 @@ export default {
         },
         async updateRecord() {
             try {
-                if (!this.currentRecord) {
-                    this.showEditRecordForm = false;
-                    return;
-                }
                 const response = await axios.put(this.$store.state.apiUrl + `/records/${this.currentRecord.id}`, this.currentRecord, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`
