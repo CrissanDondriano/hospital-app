@@ -1,30 +1,33 @@
 <template>
-<div class="registration-container">
-    <div class="registration-card">
-        <h4>Registration Form</h4>
-        <form @submit.prevent="registerUser">
-            <div class="form-group">
-                <input type="text" class="form-control" id="name" v-model="name" @input="clearErrors('name')" placeholder="Enter name" required>
-            </div>
-            <div class="form-group">
-                <input type="email" class="form-control" id="email" v-model="email" @input="clearErrors('email')" placeholder="Enter email" required>
-                <!-- this is the error message will be shown when the user types invalid email -->
-                <small class="text-danger" v-if="errors.email">{{ errors.email[0] }}</small>
-            </div>
-            <div class="form-group">
-                <input type="password" class="form-control" id="password" v-model="password" @input="clearErrors('password')" placeholder="Password" required>
-                <!-- this is the error message will be shown when the user types invalid password or not confirm -->
-                <small class="text-danger" v-if="errors.password">{{ errors.password[0] }}</small>
-            </div>
-            <div class="form-group">
-                <input type="password" class="form-control" id="confirm" v-model="confirm" placeholder="Confirm Password" required>
-            </div>
-            <button type="submit" class="btn">Register</button>
-        </form>
-        <p class="login-link">Already have an account? <router-link to="/">Login here!</router-link>
-        </p>
+    <div class="registration-container">
+        <div class="registration-card">
+            <h4>Registration Form</h4>
+            <form @submit.prevent="registerUser">
+                <div class="form-group">
+                    <input type="text" class="form-control" id="name" v-model="name" @input="clearErrors('name')"
+                        placeholder="Enter name" required>
+                </div>
+                <div class="form-group">
+                    <input type="email" class="form-control" id="email" v-model="email" @input="clearErrors('email')"
+                        placeholder="Enter email" required>
+                    <!-- this is the error message will be shown when the user types invalid email -->
+                    <small class="text-danger" v-if="errors.email">{{ errors.email[0] }}</small>
+                </div>
+                <div class="form-group">
+                    <input type="password" class="form-control" id="password" v-model="password"
+                        @input="clearErrors('password')" placeholder="Password" required>
+                    <!-- this is the error message will be shown when the user types invalid password or not confirm -->
+                    <small class="text-danger" v-if="errors.password">{{ errors.password[0] }}</small>
+                </div>
+                <div class="form-group">
+                    <input type="password" class="form-control" id="confirm" v-model="confirm"
+                        placeholder="Confirm Password" required>
+                </div>
+                <button type="submit" class="btn">Register</button>
+            </form>
+            <p class="login-link">Already have an account? <router-link to="/">Login here!</router-link></p>
+        </div>
     </div>
-</div>
 </template>
 
 <script>
@@ -43,7 +46,6 @@ export default {
         async registerUser() {
             try {
                 // Call the register API endpoint using Axios
-                // the /register is an API route that define in the backend using Laravel
                 const response = await axios.post(this.$store.state.apiUrl + '/register', {
                     name: this.name,
                     email: this.email,
@@ -66,15 +68,14 @@ export default {
                 this.errors = error.response.data.errors;
             }
         },
-        //the field param is the name of the input field that triggered the error
         clearErrors(field) {
             // Clear error message for the specified field
-            // this method is called when the user types in the input field triggering the event handler 
             this.errors[field] = null;
         }
     }
 };
 </script>
+
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
@@ -84,12 +85,18 @@ export default {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background: linear-gradient(to right, #4facfe, #00f2fe);
+    background: linear-gradient(to right, #aed9e0, #cfe9ee);
     font-family: 'Roboto', sans-serif;
+    padding: 20px;
+    background-image: url('https://www.example.com/hospital-bg.jpg');
+    /* Replace with a suitable hospital background image URL */
+    background-size: cover;
+    background-position: center;
 }
 
 .registration-card {
-    background: white;
+    background: rgba(255, 255, 255, 0.9);
+    /* Semi-transparent background */
     padding: 2rem;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -101,7 +108,17 @@ export default {
 h4 {
     margin-bottom: 1.5rem;
     font-weight: 700;
-    color: #333;
+    color: #2c3e50;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+h4::before {
+    content: '🩺';
+    /* Medical icon */
+    font-size: 1.5rem;
+    margin-right: 10px;
 }
 
 .form-group {
@@ -118,18 +135,18 @@ h4 {
 }
 
 .form-control:focus {
-    border-color: #4facfe;
-    box-shadow: 0 0 0 0.2rem rgba(79, 172, 254, 0.25);
+    border-color: #aed9e0;
+    box-shadow: 0 0 0 0.2rem rgba(174, 217, 224, 0.25);
 }
 
 .form-control:hover {
-    border-color: #00f2fe;
+    border-color: #cfe9ee;
 }
 
 .btn {
     width: 100%;
     padding: 0.75rem;
-    background-color: #4facfe;
+    background-color: #aed9e0;
     border: none;
     border-radius: 5px;
     color: white;
@@ -139,7 +156,7 @@ h4 {
 }
 
 .btn:hover {
-    background-color: #00f2fe;
+    background-color: #cfe9ee;
     transform: scale(1.05);
 }
 
@@ -154,14 +171,14 @@ h4 {
 }
 
 .login-link a {
-    color: #4facfe;
+    color: #aed9e0;
     text-decoration: none;
     font-weight: 700;
     transition: color 0.3s, text-decoration 0.3s;
 }
 
 .login-link a:hover {
-    color: #00f2fe;
+    color: #cfe9ee;
     text-decoration: underline;
 }
 </style>
