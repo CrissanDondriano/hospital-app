@@ -2,6 +2,7 @@
     <div class="registration-container">
         <div class="registration-card">
             <h4>Registration Form</h4>
+            <div class="divider"></div>
             <form @submit.prevent="registerUser">
                 <div class="form-group">
                     <input type="text" class="form-control" id="name" v-model="name" @input="clearErrors('name')"
@@ -116,6 +117,12 @@ h4::before {
   content: '🩺'; /* Medical icon */
   font-size: 1.5rem;
   margin-right: 10px;
+}
+
+.divider {
+  height: 2px;
+  background-color: #4facfe;
+  margin: 1.5rem 0;
 }
 
 .form-group {
