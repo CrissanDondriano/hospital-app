@@ -22,7 +22,7 @@
                 <tr>
                     <th>Name</th>
                     <th>Email</th>
-                    <th v-if="user.role === 'admin'">Actions</th>
+                    <th v-if="user.role === 'admin'|| user.role === 'doctor'" colspan="2">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -31,6 +31,8 @@
                     <td>{{ patient.email }}</td>
                     <td v-if="user.role === 'admin' || user.role === 'doctor'">
                         <button @click="editPatient(patient)" class="btn edit-btn">Edit</button>
+                    </td>
+                    <td v-if="user.role === 'admin'">
                         <button @click="deletePatient(patient.id)" class="btn delete-btn">Delete</button>
                     </td>
                 </tr>
@@ -49,7 +51,6 @@
 </div>
 </template>
 
-    
 <script>
 import axios from 'axios';
 
