@@ -3,7 +3,7 @@
     <h1 class="title">Manage Patients</h1>
 
     <div class="actions">
-        <button @click="showAddPatientForm = true" class="btn add-btn">Add Patient</button>
+        <button v-if="user.role === 'admin'" @click="showAddPatientForm = true" class="btn add-btn">Add Patient</button>
         <button @click="fetchPatients" class="btn load-btn">Load Patients</button>
     </div>
 
@@ -22,14 +22,14 @@
                 <tr>
                     <th>Name</th>
                     <th>Email</th>
-                    <th>Actions</th>
+                    <th v-if="user.role === 'admin'">Actions</th>
                 </tr>
             </thead>
             <tbody>
                 <tr v-for="patient in patients" :key="patient.id">
                     <td>{{ patient.name }}</td>
                     <td>{{ patient.email }}</td>
-                    <td>
+                    <td v-if="user.role === 'admin' || user.role === 'doctor'">
                         <button @click="editPatient(patient)" class="btn edit-btn">Edit</button>
                         <button @click="deletePatient(patient.id)" class="btn delete-btn">Delete</button>
                     </td>
@@ -49,7 +49,7 @@
 </div>
 </template>
 
-  
+    
 <script>
 import axios from 'axios';
 
@@ -66,6 +66,11 @@ export default {
             showAddPatientForm: false,
             showEditPatientForm: false
         };
+    },
+    computed: {
+        user() {
+            return this.$store.getters.user;
+        },
     },
     methods: {
         async fetchPatients() {
@@ -134,7 +139,6 @@ export default {
 };
 </script>
 
-  
 <style scoped>
 .container {
     padding: 20px;

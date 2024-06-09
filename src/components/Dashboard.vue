@@ -1,35 +1,36 @@
 <template>
 <div class="dashboard" v-if="user">
-    <div class="welcome">
-        <h1>Welcome to Hospital Management System</h1>
-        <div>
+    <div class="header">
+        <h1>Welcome to the Hospital Management System</h1>
+        <div class="user-info">
             <p>Welcome, {{ user.name }}!</p>
             <p>Your role: {{ user.role }}</p>
         </div>
         <button @click="logout" class="btn">Logout</button>
     </div>
 
-    <div class="sections">
-        <div v-if="user.role === 'admin'" class="admin-section">
-            <h2>Admin Section</h2>
-            <router-link to="/patients">Manage Patients</router-link>
-            <router-link to="/doctors">Manage Doctors</router-link>
-            <router-link to="/appointments">Manage Appointments</router-link>
-            <router-link to="/records">Manage Medical Records</router-link>
-        </div>
-
-        <div v-if="user.role === 'doctor'" class="doctor-section">
-            <h2>Doctor Section</h2>
-            <router-link to="/patients">View Patients</router-link>
-            <router-link to="/appointments">Manage Appointments</router-link>
-            <router-link to="/records">Update Medical Records</router-link>
-        </div>
-
-        <div v-if="user.role === 'patient'" class="patient-section">
-            <h2>Patient Section</h2>
-            <router-link to="/appointments">Book Appointments</router-link>
-            <router-link to="/records">View Medical Records</router-link>
-        </div>
+    <div class="nav">
+        <ul>
+            <li v-if="user.role === 'admin'">
+                <h2>Admin Section</h2>
+                <router-link to="/patients">Manage Patients</router-link>
+                <router-link to="/doctors">Manage Doctors</router-link>
+                <router-link to="/appointments">Manage Appointments</router-link>
+                <router-link to="/records">Manage Medical Records</router-link>
+            </li>
+            <li v-if="user.role === 'doctor'">
+                <h2>Doctor Section</h2>
+                <router-link to="/patients">View Patients</router-link>
+                <router-link to="/appointments">Manage Appointments</router-link>
+                <router-link to="/doctors">Update Profile</router-link>
+                <router-link to="/records">Update Medical Records</router-link>
+            </li>
+            <li v-if="user.role === 'patient'">
+                <h2>Patient Section</h2>
+                <router-link to="/appointments">Book Appointments</router-link>
+                <router-link to="/records">View Medical Records</router-link>
+            </li>
+        </ul>
     </div>
 </div>
 </template>
@@ -63,17 +64,13 @@ export default {
     padding: 20px;
 }
 
-.welcome {
+.header {
     margin-bottom: 20px;
+    text-align: center;
 }
 
-.sections {
-    display: flex;
-    justify-content: space-between;
-}
-
-.section {
-    flex: 1;
+.user-info {
+    margin-top: 10px;
 }
 
 .btn {
@@ -88,6 +85,15 @@ export default {
 
 .btn:hover {
     background-color: #00f2fe;
+}
+
+.nav {
+    margin-top: 20px;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
 }
 
 h2 {

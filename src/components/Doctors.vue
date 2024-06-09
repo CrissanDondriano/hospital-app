@@ -3,7 +3,7 @@
     <h1 class="title">Manage Doctors</h1>
 
     <div class="actions">
-        <button @click="showAddDoctorForm = true" class="btn add-btn">Add Doctor</button>
+        <button v-if="user.role === 'admin'" @click="showAddDoctorForm = true" class="btn add-btn">Add Doctor</button>
         <button @click="fetchDoctors" class="btn load-btn">Load Doctors</button>
     </div>
 
@@ -22,14 +22,14 @@
                 <tr>
                     <th>Name</th>
                     <th>Email</th>
-                    <th>Actions</th>
+                    <th v-if="user.role === 'admin'">Actions</th>
                 </tr>
             </thead>
             <tbody>
                 <tr v-for="doctor in doctors" :key="doctor.id">
                     <td>{{ doctor.name }}</td>
                     <td>{{ doctor.email }}</td>
-                    <td>
+                    <td v-if="user.role === 'admin' || doctor.id === user.id">
                         <button @click="editDoctor(doctor)" class="btn edit-btn">Edit</button>
                         <button @click="deleteDoctor(doctor.id)" class="btn delete-btn">Delete</button>
                     </td>
@@ -39,16 +39,17 @@
     </div>
 
     <div v-if="showEditDoctorForm" class="form-container">
-        <h2>Edit Doctor</h2>
+        <h2>{{ currentDoctor ? 'Edit Doctor' : 'View Profile' }}</h2>
         <form @submit.prevent="updateDoctor">
             <input type="text" v-model="currentDoctor.name" placeholder="Name" required />
             <input type="email" v-model="currentDoctor.email" placeholder="Email" required />
-            <button type="submit" class="btn">Update</button>
+            <button type="submit" class="btn">{{ currentDoctor ? 'Update' : 'Close' }}</button>
         </form>
     </div>
 </div>
 </template>
 
+    
 <script>
 import axios from 'axios';
 
@@ -61,37 +62,42 @@ export default {
                 name: '',
                 email: ''
             },
-            currentDoctor: {},
+            currentDoctor: null,
             showAddDoctorForm: false,
-            showEditDoctorForm: false
+            showEditDoctorForm: false,
         };
+    },
+    computed: {
+        user() {
+            return this.$store.getters.user;
+        },
     },
     methods: {
         async fetchDoctors() {
             try {
                 const response = await axios.get(this.$store.state.apiUrl + '/doctors', {
                     headers: {
-                        Authorization: `Bearer ${localStorage.getItem('token')}`
-                    }
+                        Authorization: `Bearer ${this.$store.state.token}`
+                    },
                 });
                 this.doctors = response.data;
             } catch (error) {
-                console.error('Failed to fetch doctors', error);
+                console.error('Failed to load doctors', error);
             }
         },
         async addDoctor() {
             try {
-                const response = await axios.post(this.$store.state.apiUrl + '/doctors', this.newDoctor, {
+                await axios.post(this.$store.state.apiUrl + '/doctors', this.newDoctor, {
                     headers: {
-                        Authorization: `Bearer ${localStorage.getItem('token')}`
-                    }
+                        Authorization: `Bearer ${this.$store.state.token}`
+                    },
                 });
-                this.doctors.push(response.data);
+                this.fetchDoctors();
+                this.showAddDoctorForm = false;
                 this.newDoctor = {
                     name: '',
                     email: ''
                 };
-                this.showAddDoctorForm = false;
             } catch (error) {
                 console.error('Failed to add doctor', error);
             }
@@ -104,15 +110,18 @@ export default {
         },
         async updateDoctor() {
             try {
-                const response = await axios.put(this.$store.state.apiUrl + `/doctors/${this.currentDoctor.id}`, this.currentDoctor, {
+                if (!this.currentDoctor) {
+                    this.showEditDoctorForm = false;
+                    return;
+                }
+                await axios.put(this.$store.state.apiUrl + '/doctors/' + this.currentDoctor.id, this.currentDoctor, {
                     headers: {
-                        Authorization: `Bearer ${localStorage.getItem('token')}`
-                    }
+                        Authorization: `Bearer ${this.$store.state.token}`
+                    },
                 });
-                const index = this.doctors.findIndex(doc => doc.id === this.currentDoctor.id);
-                this.doctors.splice(index, 1, response.data);
+                this.fetchDoctors();
                 this.showEditDoctorForm = false;
-                this.currentDoctor = {};
+                this.currentDoctor = null;
             } catch (error) {
                 console.error('Failed to update doctor', error);
             }
@@ -121,15 +130,18 @@ export default {
             try {
                 await axios.delete(this.$store.state.apiUrl + `/doctors/${id}`, {
                     headers: {
-                        Authorization: `Bearer ${localStorage.getItem('token')}`
-                    }
+                        Authorization: `Bearer ${this.$store.state.token}`
+                    },
                 });
-                this.doctors = this.doctors.filter(doctor => doctor.id !== id);
+                this.fetchDoctors();
             } catch (error) {
                 console.error('Failed to delete doctor', error);
             }
-        }
-    }
+        },
+    },
+    created() {
+        this.fetchDoctors();
+    },
 };
 </script>
 

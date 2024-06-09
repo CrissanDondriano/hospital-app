@@ -3,14 +3,14 @@
     <h1 class="title">Manage Medical Records</h1>
 
     <div class="actions">
-        <button @click="showAddRecordForm = true" class="btn add-btn">Add Record</button>
+        <button v-if="user.role === 'doctor'" @click="showAddRecordForm = true" class="btn add-btn">Add Record</button>
         <button @click="fetchRecords" class="btn load-btn">Load Records</button>
     </div>
 
     <div v-if="showAddRecordForm" class="form-container">
         <h2>Add New Record</h2>
         <form @submit.prevent="addRecord">
-            <input type="number" v-model="newRecord.patient_id" placeholder="Patient ID" required />
+            <input type="number" v-model="newRecord.patient_id" placeholder="Patient ID" :readonly="user.role !== 'doctor'" required />
             <input type="text" v-model="newRecord.description" placeholder="Description" required />
             <input type="date" v-model="newRecord.date" required />
             <button type="submit" class="btn">Add</button>
@@ -24,7 +24,7 @@
                     <th>Patient ID</th>
                     <th>Description</th>
                     <th>Date</th>
-                    <th>Actions</th>
+                    <th v-if="user.role === 'admin'">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -32,7 +32,7 @@
                     <td>{{ record.patient_id }}</td>
                     <td>{{ record.description }}</td>
                     <td>{{ record.date }}</td>
-                    <td>
+                    <td v-if="user.role === 'admin'">
                         <button @click="editRecord(record)" class="btn edit-btn">Edit</button>
                         <button @click="deleteRecord(record.id)" class="btn delete-btn">Delete</button>
                     </td>
@@ -42,17 +42,18 @@
     </div>
 
     <div v-if="showEditRecordForm" class="form-container">
-        <h2>Edit Record</h2>
+        <h2>{{ currentRecord ? 'Edit Record' : 'View Record' }}</h2>
         <form @submit.prevent="updateRecord">
-            <input type="number" v-model="currentRecord.patient_id" placeholder="Patient ID" required />
+            <input type="number" v-model="currentRecord.patient_id" placeholder="Patient ID" :readonly="user.role !== 'doctor'" required />
             <input type="text" v-model="currentRecord.description" placeholder="Description" required />
             <input type="date" v-model="currentRecord.date" required />
-            <button type="submit" class="btn">Update</button>
+            <button type="submit" class="btn">{{ currentRecord ? 'Update' : 'Close' }}</button>
         </form>
     </div>
 </div>
 </template>
 
+    
 <script>
 import axios from 'axios';
 
@@ -71,6 +72,11 @@ export default {
             showEditRecordForm: false
         };
     },
+    computed: {
+        user() {
+            return this.$store.getters.user;
+        },
+    },
     methods: {
         async fetchRecords() {
             try {
@@ -86,6 +92,9 @@ export default {
         },
         async addRecord() {
             try {
+                if (this.user.role === 'doctor') {
+                    this.newRecord.patient_id = this.user.id; // Assigning patient ID based on the logged-in doctor
+                }
                 const response = await axios.post(this.$store.state.apiUrl + '/records', this.newRecord, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -110,6 +119,10 @@ export default {
         },
         async updateRecord() {
             try {
+                if (!this.currentRecord) {
+                    this.showEditRecordForm = false;
+                    return;
+                }
                 const response = await axios.put(this.$store.state.apiUrl + `/records/${this.currentRecord.id}`, this.currentRecord, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`

@@ -3,17 +3,16 @@
     <h1 class="title">Manage Appointments</h1>
 
     <div class="actions">
-        <button @click="showAddAppointmentForm = true" class="btn add-btn">Add Appointment</button>
+        <button v-if="user.role === 'patient'" @click="showAddAppointmentForm = true" class="btn add-btn">Book Appointment</button>
         <button @click="fetchAppointments" class="btn load-btn">Load Appointments</button>
     </div>
 
     <div v-if="showAddAppointmentForm" class="form-container">
-        <h2>Add New Appointment</h2>
+        <h2>Book New Appointment</h2>
         <form @submit.prevent="addAppointment">
             <input type="text" v-model="newAppointment.doctor_id" placeholder="Doctor ID" required />
-            <input type="text" v-model="newAppointment.patient_id" placeholder="Patient ID" required />
             <input type="date" v-model="newAppointment.date" placeholder="Date" required />
-            <button type="submit" class="btn">Add</button>
+            <button type="submit" class="btn">Book</button>
         </form>
     </div>
 
@@ -24,7 +23,7 @@
                     <th>Doctor ID</th>
                     <th>Patient ID</th>
                     <th>Date</th>
-                    <th>Actions</th>
+                    <th v-if="user.role !== 'patient'">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -32,7 +31,7 @@
                     <td>{{ appointment.doctor_id }}</td>
                     <td>{{ appointment.patient_id }}</td>
                     <td>{{ appointment.date }}</td>
-                    <td>
+                    <td v-if="user.role !== 'patient'">
                         <button @click="editAppointment(appointment)" class="btn edit-btn">Edit</button>
                         <button @click="deleteAppointment(appointment.id)" class="btn delete-btn">Delete</button>
                     </td>
@@ -42,18 +41,18 @@
     </div>
 
     <div v-if="showEditAppointmentForm" class="form-container">
-        <h2>Edit Appointment</h2>
+        <h2>{{ currentAppointment ? 'Edit Appointment' : 'View Appointment' }}</h2>
         <form @submit.prevent="updateAppointment">
             <input type="text" v-model="currentAppointment.doctor_id" placeholder="Doctor ID" required />
             <input type="text" v-model="currentAppointment.patient_id" placeholder="Patient ID" required />
             <input type="date" v-model="currentAppointment.date" placeholder="Date" required />
-            <button type="submit" class="btn">Update</button>
+            <button type="submit" class="btn">{{ currentAppointment ? 'Update' : 'Close' }}</button>
         </form>
     </div>
 </div>
 </template>
 
-  
+    
 <script>
 import axios from 'axios';
 
@@ -72,6 +71,11 @@ export default {
             showEditAppointmentForm: false
         };
     },
+    computed: {
+        user() {
+            return this.$store.getters.user;
+        },
+    },
     methods: {
         async fetchAppointments() {
             try {
@@ -87,6 +91,7 @@ export default {
         },
         async addAppointment() {
             try {
+                this.newAppointment.patient_id = this.user.id; // Assigning patient ID based on the logged-in user
                 const response = await axios.post(this.$store.state.apiUrl + '/appointments', this.newAppointment, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -100,7 +105,7 @@ export default {
                 };
                 this.showAddAppointmentForm = false;
             } catch (error) {
-                console.error('Failed to add appointment', error);
+                console.error('Failed to book appointment', error);
             }
         },
         editAppointment(appointment) {
@@ -111,6 +116,10 @@ export default {
         },
         async updateAppointment() {
             try {
+                if (!this.currentAppointment) {
+                    this.showEditAppointmentForm = false;
+                    return;
+                }
                 const response = await axios.put(this.$store.state.apiUrl + `/appointments/${this.currentAppointment.id}`, this.currentAppointment, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -140,7 +149,6 @@ export default {
 };
 </script>
 
-  
 <style scoped>
 .container {
     padding: 20px;
