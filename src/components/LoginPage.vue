@@ -100,7 +100,12 @@
     margin-top: 1rem;
     letter-spacing: 1.5px;
     text-transform: uppercase;
-  }
+    transition: transform 0.5s ease-out;
+}
+
+.welcome-title:hover {
+  transform: scale(1.1);
+}
   
   .login-container {
     display: flex;
