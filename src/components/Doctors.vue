@@ -22,7 +22,7 @@
                 <tr>
                     <th>Name</th>
                     <th>Email</th>
-                    <th v-if="user.role === 'admin'">Actions</th>
+                    <th v-if="user.role === 'admin' || user.role === 'doctor'">Actions</th>
                 </tr>
             </thead>
             <tbody>

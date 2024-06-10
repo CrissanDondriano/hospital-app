@@ -24,7 +24,7 @@
                     <th>Patient Name</th>
                     <th>Description</th>
                     <th>Date</th>
-                    <th v-if="user.role === 'admin'">Actions</th>
+                    <th v-if="user.role === 'doctor'">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -32,7 +32,7 @@
                     <td>{{ record.patient_name }}</td>
                     <td>{{ record.description }}</td>
                     <td>{{ record.date }}</td>
-                    <td v-if="user.role === 'admin'">
+                    <td v-if="user.role === 'doctor'">
                         <button @click="editRecord(record)" class="btn edit-btn">Edit</button>
                         <button @click="deleteRecord(record.id)" class="btn delete-btn">Delete</button>
                     </td>
