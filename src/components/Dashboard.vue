@@ -16,10 +16,10 @@
 
             <div class="d-flex align-items-center">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link  text-white"> {{ user.name }}</a>
+                    <li class="nav-item" v-if="user">
+                        <a class="nav-link  text-white">{{ user.name }}</a>
                     </li>
-                    <li>
+                    <li v-if="user">
                         <button @click="logout" class="btn btn-danger">Logout</button>
                     </li>
                 </ul>
@@ -31,7 +31,7 @@
 </nav>
 
 <main>
-    <section v-if="user.role === 'admin'" class="section">
+    <section v-if="user && user.role === 'admin'" class="section">
         <div class="text-dark text-center py-5 ">
             <h1 class="fw-bold fst-italic text-uppercase">Admin Section</h1>
         </div>
@@ -54,7 +54,7 @@
             </div>
         </div>
     </section>
-    <section v-if="user.role === 'doctor'" class="section">
+    <section v-if="user && user.role === 'doctor'" class="section">
         <div class="text-dark text-center py-5">
             <h1 class="fw-bold fst-italic text-uppercase">Doctor Section</h1>
         </div>
@@ -77,7 +77,7 @@
             </div>
         </div>
     </section>
-    <section v-if="user.role === 'patient'" class="section">
+    <section v-if="user && user.role === 'patient'" class="section">
         <div class="text-dark text-center py-5">
             <h2 class="fw-bold fst-italic text-uppercase">Patient Section</h2>
         </div>

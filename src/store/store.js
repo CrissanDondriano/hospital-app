@@ -15,35 +15,37 @@ export const store = new Vuex.Store({
 
     mutations: {
         SET_USER(state, user) {
-            state.user = user;
+          state.user = user;
         },
         SET_TOKEN(state, token) {
-            state.token = token;
+          state.token = token;
         },
         CLEAR_AUTH(state) {
-            state.user = null;
-            state.token = null;
+          state.user = null;
+          state.token = null;
         },
-    },
-
+      },
+      
     actions: {
         async fetchUser({ commit, state }) {
-            try {
-                const userId = localStorage.getItem('userId');
-                if (userId) {
-                    const response = await axios.get(`${state.apiUrl}/user/${userId}`, {
-                        headers: { Authorization: `Bearer ${state.token}` },
-                    });
-                    commit('SET_USER', response.data);
-                }
-            } catch (error) {
-                console.error('Failed to fetch user', error);
+          try {
+            const userId = localStorage.getItem('userId');
+            if (userId) {
+              const response = await axios.get(`${state.apiUrl}/user/${userId}`, {
+                headers: { Authorization: `Bearer ${state.token}` },
+              });
+              commit('SET_USER', response.data);
             }
+          } catch (error) {
+            console.error('Failed to fetch user', error);
+            commit('CLEAR_AUTH');
+          }
         },
         logout({ commit }) {
-            localStorage.removeItem('token');
-            localStorage.removeItem('user');
-            commit('CLEAR_AUTH');
+          localStorage.removeItem('token');
+          localStorage.removeItem('userId');
+          commit('CLEAR_AUTH');
         },
-    },
+      }
+            
 });

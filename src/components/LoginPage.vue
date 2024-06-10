@@ -52,16 +52,15 @@
     methods: {
       async loginUser() {
         try {
-          // Call login API
           const response = await axios.post(this.$store.state.apiUrl + '/login', {
             email: this.email,
             password: this.password
           });
           if (response.status === 201) {
-            // Successful login, handle token storage
             localStorage.setItem('token', response.data.access_token);
-            localStorage.setItem('userId', response.data.user_id); // Store only the user ID
+            localStorage.setItem('userId', response.data.user_id);
             this.$store.commit('SET_TOKEN', response.data.access_token);
+            await this.$store.dispatch('fetchUser');
             this.$router.push('/dashboard');
           }
         } catch (error) {
