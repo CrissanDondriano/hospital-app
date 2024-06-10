@@ -27,9 +27,9 @@
             </thead>
             <tbody>
                 <tr v-for="doctor in doctors" :key="doctor.id">
-                    <td>{{ doctor.name }}</td>
-                    <td>{{ doctor.email }}</td>
-                    <td v-if="user.role === 'admin' || doctor.id === user.id">
+                    <td v-if="user.role === 'admin' || doctor.user_id === user.id">{{ doctor.name }}</td>
+                    <td v-if="user.role === 'admin' || doctor.user_id === user.id">{{ doctor.email }}</td>
+                    <td v-if="user.role === 'admin' || doctor.user_id === user.id">
                         <button @click="editDoctor(doctor)" class="btn edit-btn">Edit</button>
                         <button @click="deleteDoctor(doctor.id)" class="btn delete-btn">Delete</button>
                     </td>

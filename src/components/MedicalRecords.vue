@@ -29,9 +29,9 @@
             </thead>
             <tbody>
                 <tr v-for="record in records" :key="record.id">
-                    <td>{{ record.patient_name }}</td>
-                    <td>{{ record.description }}</td>
-                    <td>{{ record.date }}</td>
+                    <td v-if="user.role === 'doctor' || record.patient_id === user.id ">{{ record.patient_name }}</td>
+                    <td v-if="user.role === 'doctor' || record.patient_id === user.id ">{{ record.description }}</td>
+                    <td v-if="user.role === 'doctor' || record.patient_id === user.id ">{{ record.date }}</td>
                     <td v-if="user.role === 'doctor'">
                         <button @click="editRecord(record)" class="btn edit-btn">Edit</button>
                         <button @click="deleteRecord(record.id)" class="btn delete-btn">Delete</button>
@@ -53,7 +53,6 @@
 </div>
 </template>
 
-  
 <script>
 import axios from 'axios';
 

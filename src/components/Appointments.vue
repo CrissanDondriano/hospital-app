@@ -23,15 +23,15 @@
                     <th>Doctor Name</th>
                     <th>Patient Name</th>
                     <th>Date</th>
-                    <th v-if="user.role === 'doctor'">Actions</th>
+                    <th v-if="user.role == 'doctor' ">Actions</th>
                 </tr>
             </thead>
             <tbody>
                 <tr v-for="appointment in appointments" :key="appointment.id">
-                    <td>{{ appointment.doctor_name }}</td>
-                    <td>{{ appointment.patient_name }}</td>
-                    <td>{{ appointment.date }}</td>
-                    <td v-if="user.role === 'doctor'">
+                    <td v-if="user.role == 'doctor' || appointment.patient_id == user.id ">{{ appointment.doctor_name }}</td>
+                    <td v-if="user.role == 'doctor' || appointment.patient_id == user.id ">{{ appointment.patient_name }}</td>
+                    <td v-if="user.role == 'doctor' || appointment.patient_id == user.id ">{{ appointment.date }}</td>
+                    <td v-if=" appointment.doctor_id === user.id ">
                         <button @click="editAppointment(appointment)" class="btn edit-btn">Edit</button>
                         <button @click="deleteAppointment(appointment.id)" class="btn delete-btn">Delete</button>
                     </td>
