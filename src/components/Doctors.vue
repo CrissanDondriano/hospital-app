@@ -3,7 +3,7 @@
     <h1 class="title">Manage Doctors</h1>
 
     <div class="actions">
-        <button v-if="user.role === 'admin'" @click="showAddDoctorForm = true" class="btn add-btn">Add Doctor</button>
+        <button v-if="user && user.role === 'admin'" @click="showAddDoctorForm = true" class="btn add-btn">Add Doctor</button>
         <button @click="fetchDoctors" class="btn load-btn">Load Doctors</button>
     </div>
 

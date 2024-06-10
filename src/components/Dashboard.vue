@@ -99,23 +99,25 @@
 
 <script>
 export default {
-    name: 'HospitalManagement',
-    computed: {
-        user() {
-            return this.$store.getters.user;
-        },
+  name: 'HospitalManagement',
+  computed: {
+    user() {
+      return this.$store.getters.user;
     },
-    created() {
-        if (this.$store.getters.isAuthenticated) {
-            this.$store.dispatch('fetchUser');
-        }
+  },
+  created() {
+    if (!this.user) {
+      this.$store.dispatch('fetchUser').catch(error => {
+        console.error('Failed to fetch user:', error);
+      });
+    }
+  },
+  methods: {
+    logout() {
+      this.$store.dispatch('logout');
+      this.$router.push('/');
     },
-    methods: {
-        logout() {
-            this.$store.dispatch('logout');
-            this.$router.push('/');
-        },
-    },
+  },
 };
 </script>
 
