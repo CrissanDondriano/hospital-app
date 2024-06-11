@@ -230,8 +230,8 @@ export default {
     color: white;
 }
 
-.table-custom tr:nth-child(even) {
-    background-color: #f2f2f20b;
+.table-custom tr {
+    background-color: #f2f2f2;
 }
 
 .table-custom tr:hover {

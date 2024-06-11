@@ -237,7 +237,7 @@ export default {
     color: white;
 }
 
-.table-custom tr:nth-child(even) {
+.table-custom tr {
     background-color: #f2f2f2;
 }
 

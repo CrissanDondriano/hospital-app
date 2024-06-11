@@ -38,9 +38,9 @@
                     <td v-if="appointment.doctor_id == user.id || appointment.patient_id == user.id ">{{ appointment.doctor_name }}</td>
                     <td v-if="appointment.doctor_id == user.id || appointment.patient_id == user.id ">{{ appointment.patient_name }}</td>
                     <td v-if="appointment.doctor_id == user.id || appointment.patient_id == user.id ">{{ appointment.date }}</td>
-                    <td v-if="appointment.doctor_id == user.id">
+                    <td v-if="appointment.doctor_id == user.id || appointment.patient_id == user.id ">
                         <button @click="editAppointment(appointment)" class="btn edit-btn">Edit</button>
-                        <button @click="deleteAppointment(appointment.id)" class="btn delete-btn">Delete</button>
+                        <button @click="deleteAppointment(appointment.id)" class="btn delete-btn">Cancel</button>
                     </td>
                 </tr>
             </tbody>
@@ -256,8 +256,8 @@ export default {
     color: white;
 }
 
-.table-custom tr:nth-child(even) {
-    background-color: #f2f2f20b;
+.table-custom tr {
+    background-color: #f2f2f2;
 }
 
 .table-custom tr:hover {
