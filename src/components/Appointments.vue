@@ -160,6 +160,8 @@ export default {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     max-width: 800px;
     margin: 50px auto;
+    background-size: cover; 
+    background-position: center; 
 }
 
 .title {
