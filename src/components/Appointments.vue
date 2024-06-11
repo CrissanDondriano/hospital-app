@@ -1,58 +1,57 @@
 <template>
-<div class="container">
-    <h1 class="title">Manage Appointments</h1>
+    <div class="container">
+        <h1 class="title">Manage Appointments</h1>
 
-    <div class="actions">
-        <button v-if="user.role === 'patient'" @click="showAddAppointmentForm = true" class="btn add-btn">Book Appointment</button>
-        <button @click="fetchAppointments" class="btn load-btn">Load Appointments</button>
-    </div>
+        <div class="actions">
+            <button v-if="user.role === 'patient'" @click="showAddAppointmentForm = true" class="btn add-btn">Book Appointment</button>
+            <button @click="fetchAppointments" class="btn load-btn">Load Appointments</button>
+        </div>
 
-    <div v-if="showAddAppointmentForm" class="form-container">
-        <h2>Book New Appointment</h2>
-        <form @submit.prevent="addAppointment">
-            <input type="text" v-model="newAppointment.doctor_name" placeholder="Doctor Name" required />
-            <input type="date" v-model="newAppointment.date" placeholder="Date" required />
-            <button type="submit" class="btn">Book</button>
-        </form>
-    </div>
+        <div v-if="showAddAppointmentForm" class="form-container">
+            <h2>Book New Appointment</h2>
+            <form @submit.prevent="addAppointment">
+                <input type="text" v-model="newAppointment.doctor_name" placeholder="Doctor Name" required />
+                <input type="date" v-model="newAppointment.date" placeholder="Date" required />
+                <button type="submit" class="btn submit-btn">Book</button>
+            </form>
+        </div>
 
-    <div class="table-container">
-        <table class="table-custom">
-            <thead>
-                <tr>
-                    <th>Doctor Name</th>
-                    <th>Patient Name</th>
-                    <th>Date</th>
-                    <th v-if="user.role == 'doctor' ">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="appointment in appointments" :key="appointment.id">
-                    <td v-if="user.role == 'doctor' || appointment.patient_id == user.id ">{{ appointment.doctor_name }}</td>
-                    <td v-if="user.role == 'doctor' || appointment.patient_id == user.id ">{{ appointment.patient_name }}</td>
-                    <td v-if="user.role == 'doctor' || appointment.patient_id == user.id ">{{ appointment.date }}</td>
-                    <td v-if=" appointment.doctor_id === user.id ">
-                        <button @click="editAppointment(appointment)" class="btn edit-btn">Edit</button>
-                        <button @click="deleteAppointment(appointment.id)" class="btn delete-btn">Delete</button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+        <div class="table-container">
+            <table class="table-custom">
+                <thead>
+                    <tr>
+                        <th>Doctor Name</th>
+                        <th>Patient Name</th>
+                        <th>Date</th>
+                        <th v-if="user.role == 'doctor' ">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="appointment in appointments" :key="appointment.id">
+                        <td v-if="user.role == 'doctor' || appointment.patient_id == user.id ">{{ appointment.doctor_name }}</td>
+                        <td v-if="user.role == 'doctor' || appointment.patient_id == user.id ">{{ appointment.patient_name }}</td>
+                        <td v-if="user.role == 'doctor' || appointment.patient_id == user.id ">{{ appointment.date }}</td>
+                        <td v-if=" appointment.doctor_id === user.id ">
+                            <button @click="editAppointment(appointment)" class="btn edit-btn">Edit</button>
+                            <button @click="deleteAppointment(appointment.id)" class="btn delete-btn">Delete</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
-    <div v-if="showEditAppointmentForm" class="form-container">
-        <h2>{{ currentAppointment ? 'Edit Appointment' : 'View Appointment' }}</h2>
-        <form @submit.prevent="updateAppointment">
-            <input type="text" v-model="currentAppointment.doctor_name" placeholder="Doctor Name" required />
-            <input type="text" v-model="currentAppointment.patient_name" placeholder="Patient Name" required />
-            <input type="date" v-model="currentAppointment.date" placeholder="Date" required />
-            <button type="submit" class="btn">{{ currentAppointment ? 'Update' : 'Close' }}</button>
-        </form>
+        <div v-if="showEditAppointmentForm" class="form-container">
+            <h2>{{ currentAppointment ? 'Edit Appointment' : 'View Appointment' }}</h2>
+            <form @submit.prevent="updateAppointment">
+                <input type="text" v-model="currentAppointment.doctor_name" placeholder="Doctor Name" required />
+                <input type="text" v-model="currentAppointment.patient_name" placeholder="Patient Name" required />
+                <input type="date" v-model="currentAppointment.date" placeholder="Date" required />
+                <button type="submit" class="btn submit-btn">{{ currentAppointment ? 'Update' : 'Close' }}</button>
+            </form>
+        </div>
     </div>
-</div>
 </template>
 
-    
 <script>
 import axios from 'axios';
 
@@ -151,12 +150,17 @@ export default {
 
 <style scoped>
 .container {
-    padding: 20px;
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    max-width: 800px;
+    margin: 0 auto;
 }
 
 .title {
     text-align: center;
-    font-size: 24px;
+    font-size: 28px;
     color: #333;
     margin-bottom: 20px;
     font-weight: bold;
@@ -196,18 +200,19 @@ export default {
 }
 
 .load-btn:hover {
-    background-color: #0069d9;
+    background-color: #2870bd;
 }
 
 .table-container {
     margin-top: 20px;
+    overflow-x: auto;
 }
 
 .table-custom {
     width: 100%;
     border-collapse: collapse;
     margin-bottom: 20px;
-    border: 1px solid #ddd;
+    border: 1px solid #143a54;
 }
 
 .table-custom th,
@@ -233,9 +238,9 @@ export default {
 .form-container {
     margin-top: 20px;
     padding: 20px;
-    border: 1px solid #ddd;
+    border: 1px solid #547c63;
     border-radius: 5px;
-    background-color: #f9f9f9;
+    background-color: #e7f7ed;
 }
 
 form input {
@@ -249,6 +254,14 @@ form input {
 
 form button {
     width: 100%;
+}
+
+.submit-btn {
+    background-color: #40694a;
+}
+
+.submit-btn:hover {
+    background-color: #218838;
 }
 
 .edit-btn {
