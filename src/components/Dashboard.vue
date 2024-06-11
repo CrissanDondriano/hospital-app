@@ -52,6 +52,7 @@
                 </div>
             </div>
         </section>
+
         <section v-if="user && user.role === 'doctor'" class="section">
             <div class="text-dark text-center py-5">
                 <h1 class="fw-bold fst-italic text-uppercase">Doctor Section</h1>
@@ -149,5 +150,35 @@
         color: black;
         border: 2px solid #007bff;
     }
-    </style>
+
+    .section {
+        height: 100vh;
+        font-family: Arial, sans-serif;
+        background-image: url('https://t3.ftcdn.net/jpg/04/87/69/28/360_F_487692869_V8MZ1hLvhXQZKT50EV8Sh13AkdibGJb3.jpg');
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
+    }
     
+    .btn-link {
+        background-color: #007bff;
+        border: none;
+        color: white;
+        padding: 10px 20px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        transition-duration: 0.4s;
+        cursor: pointer;
+        border-radius: 12px;
+    }
+    
+    .btn-link:hover {
+        background-color: white;
+        color: black;
+        border: 2px solid #007bff;
+    }
+    
+    </style>
