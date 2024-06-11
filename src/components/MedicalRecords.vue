@@ -1,56 +1,57 @@
 <template>
-<div class="container">
-    <h1 class="title">Manage Medical Records</h1>
+    <br>
+    <div class="container">
+        <h1 class="title">Manage Medical Records</h1>
 
-    <div class="actions">
-        <button v-if="user.role === 'doctor'" @click="showAddRecordForm = true" class="btn add-btn">Add Record</button>
-        <button @click="fetchRecords" class="btn load-btn">Load Records</button>
-    </div>
+        <div class="actions">
+            <button v-if="user.role === 'doctor'" @click="showAddRecordForm = true" class="btn add-btn">Add Record</button>
+            <button @click="fetchRecords" class="btn load-btn">Load Records</button>
+        </div>
 
-    <div v-if="showAddRecordForm" class="form-container">
-        <h2>Add New Record</h2>
-        <form @submit.prevent="addRecord">
-            <input type="text" v-model="newRecord.patient_name" placeholder="Patient Name" required />
-            <input type="text" v-model="newRecord.description" placeholder="Description" required />
-            <input type="date" v-model="newRecord.date" required />
-            <button type="submit" class="btn">Add</button>
-        </form>
-    </div>
+        <div v-if="showAddRecordForm" class="form-container">
+            <h2>Add New Record</h2>
+            <form @submit.prevent="addRecord">
+                <input type="text" v-model="newRecord.patient_name" placeholder="Patient Name" required />
+                <input type="text" v-model="newRecord.description" placeholder="Description" required />
+                <input type="date" v-model="newRecord.date" required />
+                <button type="submit" class="btn submit-btn">Add</button>
+            </form>
+        </div>
 
-    <div class="table-container">
-        <table class="table-custom">
-            <thead>
-                <tr>
-                    <th>Patient Name</th>
-                    <th>Description</th>
-                    <th>Date</th>
-                    <th v-if="user.role === 'doctor'">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="record in records" :key="record.id">
-                    <td v-if="user.role === 'doctor' || record.patient_id === user.id ">{{ record.patient_name }}</td>
-                    <td v-if="user.role === 'doctor' || record.patient_id === user.id ">{{ record.description }}</td>
-                    <td v-if="user.role === 'doctor' || record.patient_id === user.id ">{{ record.date }}</td>
-                    <td v-if="user.role === 'doctor'">
-                        <button @click="editRecord(record)" class="btn edit-btn">Edit</button>
-                        <button @click="deleteRecord(record.id)" class="btn delete-btn">Delete</button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+        <div class="table-container">
+            <table class="table-custom">
+                <thead>
+                    <tr>
+                        <th>Patient Name</th>
+                        <th>Description</th>
+                        <th>Date</th>
+                        <th v-if="user.role === 'doctor'">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="record in records" :key="record.id">
+                        <td v-if="user.role === 'doctor' || record.patient_id === user.id ">{{ record.patient_name }}</td>
+                        <td v-if="user.role === 'doctor' || record.patient_id === user.id ">{{ record.description }}</td>
+                        <td v-if="user.role === 'doctor' || record.patient_id === user.id ">{{ record.date }}</td>
+                        <td v-if="user.role === 'doctor'">
+                            <button @click="editRecord(record)" class="btn edit-btn">Edit</button>
+                            <button @click="deleteRecord(record.id)" class="btn delete-btn">Delete</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
-    <div v-if="showEditRecordForm" class="form-container">
-        <h2>{{ currentRecord ? 'Edit Record' : 'View Record' }}</h2>
-        <form @submit.prevent="updateRecord">
-            <input type="text" v-model="currentRecord.patient_name" placeholder="Patient Name" required />
-            <input type="text" v-model="currentRecord.description" placeholder="Description" required />
-            <input type="date" v-model="currentRecord.date" required />
-            <button type="submit" class="btn">{{ currentRecord ? 'Update' : 'Close' }}</button>
-        </form>
+        <div v-if="showEditRecordForm" class="form-container">
+            <h2>{{ currentRecord ? 'Edit Record' : 'View Record' }}</h2>
+            <form @submit.prevent="updateRecord">
+                <input type="text" v-model="currentRecord.patient_name" placeholder="Patient Name" required />
+                <input type="text" v-model="currentRecord.description" placeholder="Description" required />
+                <input type="date" v-model="currentRecord.date" required />
+                <button type="submit" class="btn submit-btn">{{ currentRecord ? 'Update' : 'Close' }}</button>
+            </form>
+        </div>
     </div>
-</div>
 </template>
 
 <script>
@@ -146,15 +147,27 @@ export default {
 
 <style scoped>
 .container {
-    padding: 20px;
+    background-image: url('https://img.freepik.com/free-photo/flat-lay-medical-objects-composition-with-empty-clipboard_23-2148502930.jpg'); 
+    padding: 30px;
+    background-color: rgba(255, 255, 255, 0.459); /* Semi-transparent background */
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    max-width: 800px;
+    margin: 50px auto;
+    background-size: cover; 
+    background-position: center; 
 }
+
+
 
 .title {
     text-align: center;
-    font-size: 24px;
-    color: #333;
+    font-size: 32px; 
+    color: #ffffff;
     margin-bottom: 20px;
     font-weight: bold;
+    text-shadow: 2px 2px 4px #000000;
+    
 }
 
 .actions {
@@ -196,24 +209,25 @@ export default {
 
 .table-container {
     margin-top: 20px;
+    overflow-x: auto;
 }
 
 .table-custom {
     width: 100%;
     border-collapse: collapse;
     margin-bottom: 20px;
-    border: 1px solid #ddd;
+    border: 1px solid #143a54;
 }
 
 .table-custom th,
 .table-custom td {
     padding: 12px 15px;
     text-align: center;
-    border: 1px solid #ddd;
+    border: 1px solid #413c3c;
 }
 
 .table-custom th {
-    background-color: #4facfe;
+    background-color: #2f74b1;
     color: white;
 }
 
@@ -222,15 +236,15 @@ export default {
 }
 
 .table-custom tr:hover {
-    background-color: #e9ecef;
+    background-color: #e4eef8;
 }
 
 .form-container {
     margin-top: 20px;
     padding: 20px;
-    border: 1px solid #ddd;
+    border: 1px solid #547c63;
     border-radius: 5px;
-    background-color: #f9f9f9;
+    background-color: rgba(231, 247, 237, 0.8); /* Semi-transparent background */
 }
 
 form input {
@@ -246,8 +260,17 @@ form button {
     width: 100%;
 }
 
+.submit-btn {
+    background-color: #28a745;
+}
+
+.submit-btn:hover {
+    background-color: #218838;
+}
+
 .edit-btn {
     background-color: #ffc107;
+    margin-left: 10px;
 }
 
 .edit-btn:hover {
@@ -256,6 +279,7 @@ form button {
 
 .delete-btn {
     background-color: #dc3545;
+    margin-left: 10px;
 }
 
 .delete-btn:hover {
