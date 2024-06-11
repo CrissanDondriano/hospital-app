@@ -244,7 +244,7 @@ export default {
 }
 
 .table-custom tr:hover {
-    background-color: #e9ecef;
+    background-color: #e4eef8;
 }
 
 .form-container {
