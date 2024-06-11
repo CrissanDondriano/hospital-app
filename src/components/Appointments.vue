@@ -16,6 +16,7 @@
             </form>
         </div>
 
+
         <div class="table-container">
             <table class="table-custom">
                 <thead>
@@ -149,21 +150,32 @@ export default {
 </script>
 
 <style scoped>
+
+
 .container {
+    background-image: url('https://www.softclinicsoftware.com/wp-content/uploads/2022/05/medical-report-with-medical-equipment.jpg'); 
     padding: 30px;
-    background-color: #fff;
+    background-color: rgba(255, 255, 255, 0.459); /* Semi-transparent background */
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     max-width: 800px;
-    margin: 0 auto;
+    margin: 50px auto;
 }
 
 .title {
     text-align: center;
-    font-size: 28px;
-    color: #333;
+    font-size: 32px; 
+    color: #ffffff;
     margin-bottom: 20px;
     font-weight: bold;
+    text-shadow: 2px 2px 4px #000000;
+    
+}
+
+.title span {
+    border: 2px solid #333;
+    padding: 2px; /* Adjust padding as needed */
+    margin: 0 2px; /* Adjust margin as needed */
 }
 
 .actions {
@@ -219,16 +231,16 @@ export default {
 .table-custom td {
     padding: 12px 15px;
     text-align: center;
-    border: 1px solid #ddd;
+    border: 1px solid #413c3c;
 }
 
 .table-custom th {
-    background-color: #4facfe;
+    background-color: #2f74b1;
     color: white;
 }
 
 .table-custom tr:nth-child(even) {
-    background-color: #f2f2f2;
+    background-color: #f2f2f20b;
 }
 
 .table-custom tr:hover {
@@ -240,7 +252,7 @@ export default {
     padding: 20px;
     border: 1px solid #547c63;
     border-radius: 5px;
-    background-color: #e7f7ed;
+    background-color: rgba(231, 247, 237, 0.8); /* Semi-transparent background */
 }
 
 form input {
