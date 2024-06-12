@@ -10,13 +10,13 @@
     <div v-if="showAddAppointmentForm" class="form-container">
         <h2>Book New Appointment</h2>
         <form @submit.prevent="addAppointment">
-            <select id="doctorName" class="form-control" v-model="newAppointment.doctor_name" required>
+            <select id="doctorName" class="form-control" v-model="newAppointment.doctor_id" required>
                 <option value="" disabled>Select Doctor</option>
-                <option v-for="doctor in doctors" :key="doctor.id" :value="doctor.name">{{ doctor.name }}</option>
+                <option v-for="doctor in doctors" :key="doctor.id" :value="doctor.id">{{ doctor.name }}</option>
             </select>
-            <select id="patientName" class="form-control" v-model="newAppointment.patient_name" required>
+            <select id="patientName" class="form-control" v-model="newAppointment.patient_id" required>
                 <option value="" disabled>Select Patient</option>
-                <option v-for="patient in patients" :key="patient.id" :value="patient.name">{{ patient.name }}</option>
+                <option v-for="patient in patients" :key="patient.id" :value="patient.id">{{ patient.name }}</option>
             </select>
             <input type="date" v-model="newAppointment.date" placeholder="Date" required />
             <button type="submit" class="btn submit-btn">Book</button>
@@ -30,7 +30,7 @@
                     <th>Doctor Name</th>
                     <th>Patient Name</th>
                     <th>Date</th>
-                    <th v-if="user.role == 'doctor'">Actions</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -74,8 +74,8 @@ export default {
         return {
             appointments: [],
             newAppointment: {
-                doctor_name: '',
-                patient_name: '',
+                doctor_id: '',
+                patient_id: '',
                 date: ''
             },
             currentAppointment: {},
@@ -105,7 +105,6 @@ export default {
         },
         async addAppointment() {
             try {
-                this.newAppointment.patient_name = this.user.name; // Assigning patient name based on the logged-in user
                 const response = await axios.post(this.$store.state.apiUrl + '/appointments', this.newAppointment, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -113,8 +112,8 @@ export default {
                 });
                 this.appointments.push(response.data);
                 this.newAppointment = {
-                    doctor_name: '',
-                    patient_name: '',
+                    doctor_id: '',
+                    patient_id: '',
                     date: ''
                 };
                 this.showAddAppointmentForm = false;
